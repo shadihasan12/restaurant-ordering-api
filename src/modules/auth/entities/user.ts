@@ -1,5 +1,5 @@
 import { Exclude } from "class-transformer";
-import {  BeforeInsert, Column , Index } from "typeorm";
+import {  BeforeInsert, Column , Entity, Index } from "typeorm";
 
 import bcrypt from "bcrypt";
 import { BaseEntity } from "../../../common/entities/base";
@@ -11,6 +11,7 @@ export enum UserRole {
     ADMIN = "admin"
 }
 
+@Entity()
 export class User extends BaseEntity {
     @Column()
     firstName!:string;
