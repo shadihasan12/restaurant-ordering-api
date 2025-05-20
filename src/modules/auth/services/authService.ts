@@ -146,5 +146,14 @@ export default class AuthService {
         
         return user ? plainToInstance(User, user) : null;
       }
+
+      // async getAllUsers(req: Request, res: Response) {
+      //   const users = await this.userService.getAllUsers();
+        
+      //   res.status(200).json({
+      //     status: "success",
+      //     data: { users }
+      //   });
+      // }
     
 }

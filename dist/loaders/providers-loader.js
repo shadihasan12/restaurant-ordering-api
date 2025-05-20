@@ -12,40 +12,33 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.default = providersLoader;
+// loaders/providers-loader.js
 const awilix_1 = require("awilix");
 const path_1 = __importDefault(require("path"));
-const eventemitter2_1 = require("eventemitter2");
 const containers_1 = __importDefault(require("../containers"));
-exports.default = () => __awaiter(void 0, void 0, void 0, function* () {
-    //   container.register({
-    //     isRecordExistsConstraint: asClass(IsRecordExistsConstraint).scoped(),
-    // });
-    const eventEmitter = new eventemitter2_1.EventEmitter2();
-    containers_1.default.register({
-        eventEmitter: (0, awilix_1.asValue)(eventEmitter)
+const eventemitter2_1 = require("eventemitter2");
+function providersLoader() {
+    return __awaiter(this, void 0, void 0, function* () {
+        // register any asValue, singletons, etc:
+        containers_1.default.register({ eventEmitter: (0, awilix_1.asValue)(new eventemitter2_1.EventEmitter2()) });
+        // ─── SERVICES (Proxy) ───
+        containers_1.default.loadModules(['modules/*/services/*{.js,.ts}'], {
+            cwd: path_1.default.resolve(__dirname),
+            formatName: 'camelCase',
+            resolverOptions: {
+                lifetime: awilix_1.Lifetime.SCOPED,
+                injectionMode: awilix_1.InjectionMode.PROXY,
+            },
+        });
+        // ─── CONTROLLERS (Classic) ───
+        containers_1.default.loadModules(['modules/*/controllers/*{.js,.ts}'], {
+            cwd: path_1.default.resolve(__dirname),
+            formatName: 'camelCase',
+            resolverOptions: {
+                lifetime: awilix_1.Lifetime.SCOPED,
+                injectionMode: awilix_1.InjectionMode.CLASSIC,
+            },
+        });
     });
-    containers_1.default.loadModules([
-        "modules/*/services/*{.ts,.js}",
-        "modules/*/controllers/*{.ts,.js}",
-    ], {
-        formatName: "camelCase",
-        resolverOptions: {
-            lifetime: "SINGLETON",
-            injectionMode: awilix_1.InjectionMode.PROXY,
-        },
-        cwd: path_1.default.join(__dirname, "../"), // Set base directory for resolving paths
-    });
-    // container.loadModules(
-    //     [
-    //         "payment-providers/*{.ts,.js}",
-    //     ],
-    //     {
-    //         formatName: (name: string) => `pp_${name}`,
-    //         resolverOptions: {
-    //             lifetime: "SINGLETON",
-    //             injectionMode: InjectionMode.PROXY,
-    //         },
-    //         cwd: path.join(__dirname, "../"), // Set base directory for resolving paths
-    //     },
-    // );
-});
+}

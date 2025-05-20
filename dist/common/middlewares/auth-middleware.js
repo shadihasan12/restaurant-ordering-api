@@ -29,21 +29,22 @@ const authenticate = (req, res, next) => __awaiter(void 0, void 0, void 0, funct
         }
         // Verify token
         const decoded = jsonwebtoken_1.default.verify(token, process.env.JWT_SECRET || "your-secret-key");
-        // Get user from service
+        // Get authService from request-scoped container
         const authService = req.scope.resolve("authService");
+        // Get user from database
         const user = yield authService.getUserById(decoded.userId);
-        if (!user || !user.isActive) {
+        if (!user) {
             throw (0, error_handler_1.createAppError)("User not found or inactive", 401);
         }
-        // Attach user to request as loggedInUser to match CommonRequest interface
+        // Attach user to request (only once!)
         req.loggedInUser = user;
         next();
     }
     catch (error) {
-        if (error === "JsonWebTokenError") {
+        if (error.name === "JsonWebTokenError") {
             next((0, error_handler_1.createAppError)("Invalid token", 401));
         }
-        else if (error === "TokenExpiredError") {
+        else if (error.name === "TokenExpiredError") {
             next((0, error_handler_1.createAppError)("Token expired", 401));
         }
         else {
@@ -56,7 +57,7 @@ exports.authenticate = authenticate;
 const restrictTo = (...roles) => {
     return (req, res, next) => {
         const user = req.loggedInUser;
-        if (!user) {
+        if (!user || !user.role) {
             return next((0, error_handler_1.createAppError)("Not authenticated", 401));
         }
         if (!roles.includes(user.role)) {

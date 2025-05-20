@@ -41,7 +41,17 @@ export default class AuthController {
 
       res.status(200).json({
         status: "success",
-        data: { user, token }
+        data: {
+          user: {
+            id: user.id,
+            email: user.email,
+            firstName: user.firstName,
+            lastName: user.lastName,
+            role: user.role
+          },
+          token,
+          isAdmin: user.role === 'admin' || user.role === 'manager'
+        }
       });
     } catch (error) {
       console.error("Login error:", error);

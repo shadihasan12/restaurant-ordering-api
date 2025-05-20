@@ -19,7 +19,8 @@ export const AppDataSource = new DataSource({
   username: process.env.DB_USERNAME || "postgres",
   password: process.env.DB_PASSWORD || "postgres",
   database: process.env.DB_NAME || "restaurant_ordering",
-  synchronize: process.env.NODE_ENV === "development", // Automatic synchronization in development
+  synchronize:true,
+  //  process.env.NODE_ENV === "development", // Automatic synchronization in development
   logging: process.env.NODE_ENV === "development", // Log SQL in development
   entities: [path.join(__dirname, "../modules/**/entities/*.{js,ts}")], // Path to entity files
   migrations: [path.join(__dirname, "../migrations/*.{js,ts}")], // Path to migration files

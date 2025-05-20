@@ -15,7 +15,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken")); // Import proper types
 const class_transformer_1 = require("class-transformer");
 const user_1 = require("../entities/user");
-const error_handler_1 = require("@common/middlewares/error_handler");
+const error_handler_1 = require("../../../common/middlewares/error_handler");
 class AuthService {
     constructor(entityManager) {
         this.entityManager = entityManager;

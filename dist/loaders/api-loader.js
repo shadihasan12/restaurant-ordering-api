@@ -17,14 +17,15 @@ const routes_1 = __importDefault(require("../modules/auth/routes"));
 exports.default = (_a) => __awaiter(void 0, [_a], void 0, function* ({ app, container }) {
     // Create main router
     const router = (0, express_1.Router)();
-    // API version prefix
-    app.use("/api/v1", router);
-    // Register scope middleware to provide request-scoped container
     app.use((req, res, next) => {
+        console.log("Applying scope middleware");
         req.container = container;
         req.scope = container.createScope();
         next();
     });
+    // API version prefix
+    app.use("/api/v1", router);
+    // Register scope middleware to provide request-scoped container
     // Health check endpoint
     router.get("/health", (req, res) => {
         res.status(200).json({ status: "ok" });

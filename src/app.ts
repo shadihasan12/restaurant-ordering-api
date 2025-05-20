@@ -8,6 +8,7 @@ import apiLoader from "./loaders/api-loader";
 import container from "./containers";
 import errorHandler from "./common/middlewares/error_handler";
 import providersLoader from "./loaders/providers-loader";
+import { seedAdminUser } from "./database/seeders/admin-user-seeder";
 // Load environment variables
 dotenv.config();
 
@@ -23,9 +24,12 @@ app.use(helmet());
 export const initializeApp = async (): Promise<Express> => {
   try {
     // Connect to database
-    await dbLoader(ContextEnum.SERVER);
+    const dataSource = await dbLoader(ContextEnum.SERVER);
     
-
+    // Seed admin user if in development mode
+    // if (process.env.NODE_ENV === 'development') {
+      await seedAdminUser(dataSource.manager);
+    // }
     await providersLoader(); 
     // Load API routes
     await apiLoader({ app, container });

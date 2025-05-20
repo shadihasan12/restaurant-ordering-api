@@ -33,7 +33,7 @@ var UserRole;
     UserRole["MANAGER"] = "manager";
     UserRole["ADMIN"] = "admin";
 })(UserRole || (exports.UserRole = UserRole = {}));
-class User extends base_1.BaseEntity {
+let User = class User extends base_1.BaseEntity {
     set password(password) {
         this.temPassword = password;
     }
@@ -53,7 +53,7 @@ class User extends base_1.BaseEntity {
     get fullName() {
         return `${this.firstName} ${this.lastName}`;
     }
-}
+};
 exports.User = User;
 __decorate([
     (0, typeorm_1.Column)(),
@@ -82,8 +82,8 @@ __decorate([
     __metadata("design:type", String)
 ], User.prototype, "role", void 0);
 __decorate([
+    (0, class_transformer_1.Exclude)(),
     (0, typeorm_1.Column)(),
-    (0, class_transformer_1.Exclude)({ toPlainOnly: true }),
     __metadata("design:type", String)
 ], User.prototype, "passwordHash", void 0);
 __decorate([
@@ -95,8 +95,16 @@ __decorate([
     __metadata("design:type", Boolean)
 ], User.prototype, "isActive", void 0);
 __decorate([
+    (0, class_transformer_1.Exclude)(),
+    (0, typeorm_1.Column)(),
+    __metadata("design:type", String)
+], User.prototype, "temPassword", void 0);
+__decorate([
     (0, typeorm_1.BeforeInsert)(),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", []),
     __metadata("design:returntype", Promise)
 ], User.prototype, "hasPassword", null);
+exports.User = User = __decorate([
+    (0, typeorm_1.Entity)('users')
+], User);
